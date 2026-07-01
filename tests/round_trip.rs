@@ -12,8 +12,8 @@ use signal_frame::{
 };
 use signal_listener::{
     CaptureStoreDirectory, InputSource, ListenerDaemonConfiguration, MetaSocketMode,
-    MetaSocketPath, OutputTarget, SocketMode, TranscriptionMode, WirePath, WorkingSocketMode,
-    WorkingSocketPath,
+    MetaSocketPath, OutputTarget, OutputTargets, SocketMode, TranscriptionMode, WirePath,
+    WorkingSocketMode, WorkingSocketPath,
 };
 
 struct ListenerConfigurationFixture;
@@ -42,7 +42,7 @@ impl ListenerConfigurationFixture {
             )),
             input_source: InputSource::SystemDefault,
             transcription_mode: TranscriptionMode::BatchOnStop,
-            output_target: OutputTarget::SystemClipboard,
+            output_targets: OutputTargets::new(vec![OutputTarget::SystemClipboard]),
         }
     }
 

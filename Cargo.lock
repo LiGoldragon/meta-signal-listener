@@ -300,7 +300,7 @@ checksum = "88904434abc2901f197fe8cc55f0445e7ded921dba5911dad2e2b39b48e663c4"
 
 [[package]]
 name = "meta-signal-listener"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "nota",
  "rkyv",
@@ -593,8 +593,8 @@ dependencies = [
 
 [[package]]
 name = "signal-listener"
-version = "0.1.0"
-source = "git+https://github.com/LiGoldragon/signal-listener.git?branch=main#1b61a61c92e8734a7d0dad6dbc5dfd77418df976"
+version = "0.2.0"
+source = "git+https://github.com/LiGoldragon/signal-listener.git?branch=main#e2a390b0ae56fcf38a0a3749731b3290d2db5630"
 dependencies = [
  "nota",
  "rkyv",

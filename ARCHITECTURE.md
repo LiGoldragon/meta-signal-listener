@@ -18,7 +18,8 @@ Configure(ListenerDaemonConfiguration)   Configured(ConfigurationGeneration)
 The configuration record is imported from `signal-listener` so daemon startup
 and meta reconfiguration share one typed identity. The initial configuration
 names the working socket, meta socket, capture store directory, default input,
-batch-on-stop transcription mode, and `SystemClipboard` output target.
+batch-on-stop transcription mode, and configured output targets starting with
+`SystemClipboard`.
 
 ## Owned
 
@@ -29,7 +30,7 @@ batch-on-stop transcription mode, and `SystemClipboard` output target.
 
 ## Not Owned
 
-- Ordinary start/stop capture traffic lives in `signal-listener`.
+- Ordinary start/stop/status capture traffic lives in `signal-listener`.
 - Audio capture, durable disk write, transcription execution, clipboard
   mutation, sockets, and daemon state live in `listener`.
 - Schema generation machinery lives in `schema-rust-next`.
