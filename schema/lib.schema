@@ -1,0 +1,36 @@
+;; meta-signal-listener — owner/meta authority wire contract for Listener.
+;;
+;; Wire-only: carries privileged configuration and policy traffic. Ordinary
+;; capture/transcription control stays in signal-listener; daemon runtime,
+;; audio capture, disk writes, transcription, and clipboard effects stay in
+;; listener.
+
+{
+  ListenerDaemonConfiguration signal-listener:lib:ListenerDaemonConfiguration
+}
+[(Configure ListenerDaemonConfiguration)]
+[(Configured Configured)
+ (ConfigurationRejected ConfigurationRejected)
+ (RequestUnimplemented RequestUnimplemented)]
+{
+  ConfigurationGeneration Integer
+  Generation ConfigurationGeneration
+  Configured Generation
+
+  ConfigurationRejectionReason [
+    OwnerAuthorityRequired
+    MalformedConfiguration
+    UnsupportedConfiguration
+  ]
+  RejectionReason ConfigurationRejectionReason
+  ConfigurationRejected RejectionReason
+
+  OperationKind [Configure]
+  UnimplementedReason [NotBuiltYet DependencyNotReady]
+  UnimplementedOperationKind OperationKind
+  Reason UnimplementedReason
+  RequestUnimplemented {
+    UnimplementedOperationKind
+    Reason
+  }
+}
