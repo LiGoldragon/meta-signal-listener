@@ -33,13 +33,13 @@ batch-on-stop transcription mode, and configured output targets starting with
 - Ordinary start/stop/status capture traffic lives in `signal-listener`.
 - Audio capture, durable disk write, transcription execution, clipboard
   mutation, sockets, and daemon state live in `listener`.
-- Schema generation machinery lives in `schema-rust-next`.
+- Schema generation machinery lives in `schema-rust`.
 
 ## Code Map
 
 - `schema/lib.schema` is the authored meta contract vocabulary.
 - `build.rs` imports the `signal-listener` schema directory through Cargo
-  metadata and runs `schema-rust-next`.
+  metadata and runs `schema-rust`.
 - `src/schema/lib.rs` is the generated checked-in artifact.
 - `src/lib.rs` re-exports generated nouns and adds small accessors/aliases.
 - `tests/round_trip.rs` proves frame and NOTA round trips.
