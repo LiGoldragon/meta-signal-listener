@@ -521,7 +521,7 @@ dependencies = [
 [[package]]
 name = "schema-rust"
 version = "0.5.3"
-source = "git+https://github.com/LiGoldragon/schema-rust.git?branch=drop-next#67b91f5a6a70eced5854f27c7af8b39ace7e2d88"
+source = "git+https://github.com/LiGoldragon/schema-rust.git?branch=drop-next#94a0aa88a1d909b6f87cbf1431762c6fb0e19b71"
 dependencies = [
  "nota",
  "prettyplease",
@@ -594,7 +594,7 @@ dependencies = [
 [[package]]
 name = "signal-listener"
 version = "0.4.0"
-source = "git+https://github.com/LiGoldragon/signal-listener.git?branch=drop-next#975abf826651580cf29be0ad4f26a32d5a32eb70"
+source = "git+https://github.com/LiGoldragon/signal-listener.git?branch=drop-next#322b0b72424f22bb48dc5b8ca1e2eb7e193b3df0"
 dependencies = [
  "nota",
  "rkyv",
