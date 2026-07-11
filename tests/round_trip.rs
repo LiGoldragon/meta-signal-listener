@@ -105,11 +105,11 @@ fn configure_request_carries_listener_daemon_configuration() {
 #[test]
 fn reply_variants_round_trip() {
     let replies = [
-        Output::configured(Generation::new(ConfigurationGeneration::new(7))),
-        Output::ConfigurationRejected(ConfigurationRejected::new(RejectionReason::new(
+        Output::accepted(Generation::new(ConfigurationGeneration::new(7))),
+        Output::Rejected(ConfigurationRejected::new(RejectionReason::new(
             ConfigurationRejectionReason::OwnerAuthorityRequired,
         ))),
-        Output::RequestUnimplemented(RequestUnimplemented {
+        Output::Unimplemented(RequestUnimplemented {
             unimplemented_operation_kind: UnimplementedOperationKind::new(OperationKind::Configure),
             reason: Reason::new(UnimplementedReason::DependencyNotReady),
         }),

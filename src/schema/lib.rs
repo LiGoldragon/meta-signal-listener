@@ -160,9 +160,9 @@ pub enum Input {
 )]
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
 pub enum Output {
-    Configured(Configured),
-    ConfigurationRejected(ConfigurationRejected),
-    RequestUnimplemented(RequestUnimplemented),
+    Accepted(Configured),
+    Rejected(ConfigurationRejected),
+    Unimplemented(RequestUnimplemented),
 }
 
 #[rustfmt::skip]
@@ -307,14 +307,14 @@ impl Input {
 
 #[rustfmt::skip]
 impl Output {
-    pub fn configured(payload: Generation) -> Self {
-        Self::Configured(Configured::new(payload))
+    pub fn accepted(payload: Generation) -> Self {
+        Self::Accepted(Configured::new(payload))
     }
-    pub fn configuration_rejected(payload: RejectionReason) -> Self {
-        Self::ConfigurationRejected(ConfigurationRejected::new(payload))
+    pub fn rejected(payload: RejectionReason) -> Self {
+        Self::Rejected(ConfigurationRejected::new(payload))
     }
-    pub fn request_unimplemented(payload: RequestUnimplemented) -> Self {
-        Self::RequestUnimplemented(payload)
+    pub fn unimplemented(payload: RequestUnimplemented) -> Self {
+        Self::Unimplemented(payload)
     }
 }
 
@@ -328,21 +328,21 @@ impl From<ListenerDaemonConfiguration> for Input {
 #[rustfmt::skip]
 impl From<Configured> for Output {
     fn from(payload: Configured) -> Self {
-        Self::Configured(payload)
+        Self::Accepted(payload)
     }
 }
 
 #[rustfmt::skip]
 impl From<ConfigurationRejected> for Output {
     fn from(payload: ConfigurationRejected) -> Self {
-        Self::ConfigurationRejected(payload)
+        Self::Rejected(payload)
     }
 }
 
 #[rustfmt::skip]
 impl From<RequestUnimplemented> for Output {
     fn from(payload: RequestUnimplemented) -> Self {
-        Self::RequestUnimplemented(payload)
+        Self::Unimplemented(payload)
     }
 }
 
@@ -381,9 +381,9 @@ impl std::fmt::Display for Output {
 #[rustfmt::skip]
 pub mod short_header {
     pub const INPUT_CONFIGURE: u64 = 0x0000000000000000;
-    pub const OUTPUT_CONFIGURED: u64 = 0x0100000000000000;
-    pub const OUTPUT_CONFIGURATION_REJECTED: u64 = 0x0101000000000000;
-    pub const OUTPUT_REQUEST_UNIMPLEMENTED: u64 = 0x0102000000000000;
+    pub const OUTPUT_ACCEPTED: u64 = 0x0100000000000000;
+    pub const OUTPUT_REJECTED: u64 = 0x0101000000000000;
+    pub const OUTPUT_UNIMPLEMENTED: u64 = 0x0102000000000000;
 }
 
 #[rustfmt::skip]
@@ -456,9 +456,9 @@ pub enum InputRoute {
     Eq,
 )]
 pub enum OutputRoute {
-    Configured,
-    ConfigurationRejected,
-    RequestUnimplemented,
+    Accepted,
+    Rejected,
+    Unimplemented,
 }
 
 #[rustfmt::skip]
@@ -526,29 +526,25 @@ impl Input {
 impl Output {
     pub fn route(&self) -> OutputRoute {
         match self {
-            Self::Configured(_) => OutputRoute::Configured,
-            Self::ConfigurationRejected(_) => OutputRoute::ConfigurationRejected,
-            Self::RequestUnimplemented(_) => OutputRoute::RequestUnimplemented,
+            Self::Accepted(_) => OutputRoute::Accepted,
+            Self::Rejected(_) => OutputRoute::Rejected,
+            Self::Unimplemented(_) => OutputRoute::Unimplemented,
         }
     }
     pub fn short_header(&self) -> u64 {
         match self {
-            Self::Configured(_) => short_header::OUTPUT_CONFIGURED,
-            Self::ConfigurationRejected(_) => short_header::OUTPUT_CONFIGURATION_REJECTED,
-            Self::RequestUnimplemented(_) => short_header::OUTPUT_REQUEST_UNIMPLEMENTED,
+            Self::Accepted(_) => short_header::OUTPUT_ACCEPTED,
+            Self::Rejected(_) => short_header::OUTPUT_REJECTED,
+            Self::Unimplemented(_) => short_header::OUTPUT_UNIMPLEMENTED,
         }
     }
     pub fn route_from_short_header(
         header: u64,
     ) -> Result<OutputRoute, SignalFrameError> {
         match header {
-            short_header::OUTPUT_CONFIGURED => Ok(OutputRoute::Configured),
-            short_header::OUTPUT_CONFIGURATION_REJECTED => {
-                Ok(OutputRoute::ConfigurationRejected)
-            }
-            short_header::OUTPUT_REQUEST_UNIMPLEMENTED => {
-                Ok(OutputRoute::RequestUnimplemented)
-            }
+            short_header::OUTPUT_ACCEPTED => Ok(OutputRoute::Accepted),
+            short_header::OUTPUT_REJECTED => Ok(OutputRoute::Rejected),
+            short_header::OUTPUT_UNIMPLEMENTED => Ok(OutputRoute::Unimplemented),
             _ => {
                 Err(SignalFrameError::UnknownHeader {
                     root_enum: "Output",
