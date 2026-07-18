@@ -24,14 +24,14 @@ impl SchemaBuild {
         CargoSchemaMetadata::new("meta-signal-listener").emit_schema_directory(&self.crate_root);
 
         let ordinary_signal =
-            DependencySchema::from_cargo_metadata("signal-listener", "signal-listener", "0.2.0")
+            DependencySchema::from_cargo_metadata("signal-listener", "signal-listener", "0.8.0")
                 .expect("read signal-listener schema metadata")
                 .expect(
                     "signal-listener schema directory exposed via DEP_SIGNAL_LISTENER_SCHEMA_DIR",
                 );
 
         GenerationDriver::new(
-            GenerationPlan::wire_contract(&self.crate_root, "meta-signal-listener", "0.2.0")
+            GenerationPlan::wire_contract(&self.crate_root, "meta-signal-listener", "0.3.0")
                 .with_dependency_schema(ordinary_signal),
         )
         .generate()
