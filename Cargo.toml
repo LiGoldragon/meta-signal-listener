@@ -27,7 +27,7 @@ nota-text = ["dep:nota", "signal-frame/nota-text", "signal-listener/nota-text"]
 nota            = { package = "nota", git = "https://github.com/LiGoldragon/nota.git", rev = "7d0651a0e098efea5fe2578cb06d88e009d40ff0", optional = true }
 rkyv            = { version = "0.8", default-features = false, features = ["std", "bytecheck", "little_endian", "pointer_width_32", "unaligned"] }
 signal-frame    = { git = "https://github.com/LiGoldragon/signal-frame.git", rev = "f46872e7e8edae5264c892443d415a273b231234", default-features = false }
-signal-listener = { git = "https://github.com/LiGoldragon/signal-listener.git", rev = "48fe6d341a5b53d32dd932fe152b03c63cc9f2c3", default-features = false }
+signal-listener = { git = "https://github.com/LiGoldragon/signal-listener.git", rev = "434ccdbd7abcc720811c101c90a5b6ccf09759e9", default-features = false }
 thiserror       = "2"
 
 [build-dependencies]
