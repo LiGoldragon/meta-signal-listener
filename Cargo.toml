@@ -27,11 +27,11 @@ nota-text = ["dep:nota", "signal-frame/nota-text", "signal-listener/nota-text"]
 nota            = { package = "nota", git = "https://github.com/LiGoldragon/nota.git", rev = "7d0651a0e098efea5fe2578cb06d88e009d40ff0", optional = true }
 rkyv            = { version = "0.8", default-features = false, features = ["std", "bytecheck", "little_endian", "pointer_width_32", "unaligned"] }
 signal-frame    = { git = "https://github.com/LiGoldragon/signal-frame.git", rev = "f46872e7e8edae5264c892443d415a273b231234", default-features = false }
-signal-listener = { git = "https://github.com/LiGoldragon/signal-listener.git", rev = "434ccdbd7abcc720811c101c90a5b6ccf09759e9", default-features = false }
+signal-listener = { git = "https://github.com/LiGoldragon/signal-listener.git", rev = "b44a9e7a2161e1fd77df6ecde64bb824f2dd2069", default-features = false }
 thiserror       = "2"
 
 [build-dependencies]
-schema-rust = { git = "https://github.com/LiGoldragon/schema-rust.git", rev = "3121201736089128ae8332004df0340c55026de2" }
+schema-rust = { git = "https://github.com/LiGoldragon/schema-rust.git", rev = "5c743ee5cab80db66fa1f21708792983aa73929f" }
 
 [lints.rust]
 unsafe_code = "forbid"
