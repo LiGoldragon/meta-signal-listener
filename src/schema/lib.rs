@@ -55,6 +55,106 @@ pub struct Configured(Generation);
     PartialEq,
     Eq,
 )]
+pub enum TranscriptionProviderId {
+    WisprFlow,
+    OpenAi,
+}
+
+#[rustfmt::skip]
+#[cfg_attr(
+    feature = "nota-text",
+    derive(nota::NotaDecode, nota::NotaDecodeTraced, nota::NotaEncode)
+)]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
+pub struct TranscriptionProviderIds(Vec<TranscriptionProviderId>);
+
+#[rustfmt::skip]
+#[cfg_attr(
+    feature = "nota-text",
+    derive(nota::NotaDecode, nota::NotaDecodeTraced, nota::NotaEncode)
+)]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
+pub struct TranscriptionProviderPolicy(TranscriptionProviderIds);
+
+#[rustfmt::skip]
+#[cfg_attr(
+    feature = "nota-text",
+    derive(nota::NotaDecode, nota::NotaDecodeTraced, nota::NotaEncode)
+)]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
+pub struct ProviderPolicyGeneration(Integer);
+
+#[rustfmt::skip]
+#[cfg_attr(
+    feature = "nota-text",
+    derive(nota::NotaDecode, nota::NotaDecodeTraced, nota::NotaEncode)
+)]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
+pub struct ProviderPolicyGenerationReceipt(ProviderPolicyGeneration);
+
+#[rustfmt::skip]
+#[cfg_attr(
+    feature = "nota-text",
+    derive(nota::NotaDecode, nota::NotaDecodeTraced, nota::NotaEncode)
+)]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
+pub struct ProviderPolicyConfigured(ProviderPolicyGenerationReceipt);
+
+#[rustfmt::skip]
+#[cfg_attr(
+    feature = "nota-text",
+    derive(nota::NotaDecode, nota::NotaDecodeTraced, nota::NotaEncode)
+)]
+#[derive(
+    rkyv::Archive,
+    rkyv::Serialize,
+    rkyv::Deserialize,
+    Clone,
+    Copy,
+    Debug,
+    PartialEq,
+    Eq,
+)]
+pub enum TranscriptionProviderConfigurationRejectionReason {
+    Empty,
+    Duplicate,
+}
+
+#[rustfmt::skip]
+#[cfg_attr(
+    feature = "nota-text",
+    derive(nota::NotaDecode, nota::NotaDecodeTraced, nota::NotaEncode)
+)]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
+pub struct TranscriptionProviderPolicyRejection(
+    TranscriptionProviderConfigurationRejectionReason,
+);
+
+#[rustfmt::skip]
+#[cfg_attr(
+    feature = "nota-text",
+    derive(nota::NotaDecode, nota::NotaDecodeTraced, nota::NotaEncode)
+)]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
+pub struct TranscriptionProviderConfigurationRejected(
+    TranscriptionProviderPolicyRejection,
+);
+
+#[rustfmt::skip]
+#[cfg_attr(
+    feature = "nota-text",
+    derive(nota::NotaDecode, nota::NotaDecodeTraced, nota::NotaEncode)
+)]
+#[derive(
+    rkyv::Archive,
+    rkyv::Serialize,
+    rkyv::Deserialize,
+    Clone,
+    Copy,
+    Debug,
+    PartialEq,
+    Eq,
+)]
 pub enum ConfigurationRejectionReason {
     OwnerAuthorityRequired,
     MalformedConfiguration,
@@ -94,6 +194,7 @@ pub struct ConfigurationRejected(RejectionReason);
 )]
 pub enum OperationKind {
     Configure,
+    ConfigureTranscriptionProviders,
 }
 
 #[rustfmt::skip]
@@ -151,6 +252,7 @@ pub struct RequestUnimplemented {
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
 pub enum Input {
     Configure(ListenerDaemonConfiguration),
+    ConfigureTranscriptionProviders(TranscriptionProviderPolicy),
 }
 
 #[rustfmt::skip]
@@ -161,7 +263,9 @@ pub enum Input {
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
 pub enum Output {
     Accepted(Configured),
+    TranscriptionProvidersConfigured(ProviderPolicyConfigured),
     Rejected(ConfigurationRejected),
+    TranscriptionProviderConfigurationRejected(TranscriptionProviderPolicyRejection),
     Unimplemented(RequestUnimplemented),
 }
 
@@ -218,6 +322,141 @@ impl Configured {
 #[rustfmt::skip]
 impl From<Generation> for Configured {
     fn from(payload: Generation) -> Self {
+        Self::new(payload)
+    }
+}
+
+#[rustfmt::skip]
+impl TranscriptionProviderIds {
+    pub fn new(payload: Vec<TranscriptionProviderId>) -> Self {
+        Self(payload)
+    }
+    pub fn payload(&self) -> &Vec<TranscriptionProviderId> {
+        &self.0
+    }
+    pub fn into_payload(self) -> Vec<TranscriptionProviderId> {
+        self.0
+    }
+}
+#[rustfmt::skip]
+impl From<Vec<TranscriptionProviderId>> for TranscriptionProviderIds {
+    fn from(payload: Vec<TranscriptionProviderId>) -> Self {
+        Self::new(payload)
+    }
+}
+
+#[rustfmt::skip]
+impl TranscriptionProviderPolicy {
+    pub fn new(payload: TranscriptionProviderIds) -> Self {
+        Self(payload)
+    }
+    pub fn payload(&self) -> &TranscriptionProviderIds {
+        &self.0
+    }
+    pub fn into_payload(self) -> TranscriptionProviderIds {
+        self.0
+    }
+}
+#[rustfmt::skip]
+impl From<TranscriptionProviderIds> for TranscriptionProviderPolicy {
+    fn from(payload: TranscriptionProviderIds) -> Self {
+        Self::new(payload)
+    }
+}
+
+#[rustfmt::skip]
+impl ProviderPolicyGeneration {
+    pub fn new(payload: Integer) -> Self {
+        Self(payload)
+    }
+    pub fn payload(&self) -> &Integer {
+        &self.0
+    }
+    pub fn into_payload(self) -> Integer {
+        self.0
+    }
+}
+#[rustfmt::skip]
+impl From<Integer> for ProviderPolicyGeneration {
+    fn from(payload: Integer) -> Self {
+        Self::new(payload)
+    }
+}
+
+#[rustfmt::skip]
+impl ProviderPolicyGenerationReceipt {
+    pub fn new(payload: ProviderPolicyGeneration) -> Self {
+        Self(payload)
+    }
+    pub fn payload(&self) -> &ProviderPolicyGeneration {
+        &self.0
+    }
+    pub fn into_payload(self) -> ProviderPolicyGeneration {
+        self.0
+    }
+}
+#[rustfmt::skip]
+impl From<ProviderPolicyGeneration> for ProviderPolicyGenerationReceipt {
+    fn from(payload: ProviderPolicyGeneration) -> Self {
+        Self::new(payload)
+    }
+}
+
+#[rustfmt::skip]
+impl ProviderPolicyConfigured {
+    pub fn new(payload: ProviderPolicyGenerationReceipt) -> Self {
+        Self(payload)
+    }
+    pub fn payload(&self) -> &ProviderPolicyGenerationReceipt {
+        &self.0
+    }
+    pub fn into_payload(self) -> ProviderPolicyGenerationReceipt {
+        self.0
+    }
+}
+#[rustfmt::skip]
+impl From<ProviderPolicyGenerationReceipt> for ProviderPolicyConfigured {
+    fn from(payload: ProviderPolicyGenerationReceipt) -> Self {
+        Self::new(payload)
+    }
+}
+
+#[rustfmt::skip]
+impl TranscriptionProviderPolicyRejection {
+    pub fn new(payload: TranscriptionProviderConfigurationRejectionReason) -> Self {
+        Self(payload)
+    }
+    pub fn payload(&self) -> &TranscriptionProviderConfigurationRejectionReason {
+        &self.0
+    }
+    pub fn into_payload(self) -> TranscriptionProviderConfigurationRejectionReason {
+        self.0
+    }
+}
+#[rustfmt::skip]
+impl From<TranscriptionProviderConfigurationRejectionReason>
+for TranscriptionProviderPolicyRejection {
+    fn from(payload: TranscriptionProviderConfigurationRejectionReason) -> Self {
+        Self::new(payload)
+    }
+}
+
+#[rustfmt::skip]
+impl TranscriptionProviderConfigurationRejected {
+    pub fn new(payload: TranscriptionProviderPolicyRejection) -> Self {
+        Self(payload)
+    }
+    pub fn payload(&self) -> &TranscriptionProviderPolicyRejection {
+        &self.0
+    }
+    pub fn into_payload(self) -> TranscriptionProviderPolicyRejection {
+        self.0
+    }
+}
+#[rustfmt::skip]
+impl From<TranscriptionProviderPolicyRejection>
+for TranscriptionProviderConfigurationRejected {
+    fn from(payload: TranscriptionProviderPolicyRejection) -> Self {
         Self::new(payload)
     }
 }
@@ -303,6 +542,9 @@ impl Input {
     pub fn configure(payload: ListenerDaemonConfiguration) -> Self {
         Self::Configure(payload)
     }
+    pub fn configure_transcription_providers(payload: TranscriptionProviderIds) -> Self {
+        Self::ConfigureTranscriptionProviders(TranscriptionProviderPolicy::new(payload))
+    }
 }
 
 #[rustfmt::skip]
@@ -310,8 +552,20 @@ impl Output {
     pub fn accepted(payload: Generation) -> Self {
         Self::Accepted(Configured::new(payload))
     }
+    pub fn transcription_providers_configured(
+        payload: ProviderPolicyGenerationReceipt,
+    ) -> Self {
+        Self::TranscriptionProvidersConfigured(ProviderPolicyConfigured::new(payload))
+    }
     pub fn rejected(payload: RejectionReason) -> Self {
         Self::Rejected(ConfigurationRejected::new(payload))
+    }
+    pub fn transcription_provider_configuration_rejected(
+        payload: TranscriptionProviderConfigurationRejectionReason,
+    ) -> Self {
+        Self::TranscriptionProviderConfigurationRejected(
+            TranscriptionProviderPolicyRejection::new(payload),
+        )
     }
     pub fn unimplemented(payload: RequestUnimplemented) -> Self {
         Self::Unimplemented(payload)
@@ -326,6 +580,13 @@ impl From<ListenerDaemonConfiguration> for Input {
 }
 
 #[rustfmt::skip]
+impl From<TranscriptionProviderPolicy> for Input {
+    fn from(payload: TranscriptionProviderPolicy) -> Self {
+        Self::ConfigureTranscriptionProviders(payload)
+    }
+}
+
+#[rustfmt::skip]
 impl From<Configured> for Output {
     fn from(payload: Configured) -> Self {
         Self::Accepted(payload)
@@ -333,9 +594,23 @@ impl From<Configured> for Output {
 }
 
 #[rustfmt::skip]
+impl From<ProviderPolicyConfigured> for Output {
+    fn from(payload: ProviderPolicyConfigured) -> Self {
+        Self::TranscriptionProvidersConfigured(payload)
+    }
+}
+
+#[rustfmt::skip]
 impl From<ConfigurationRejected> for Output {
     fn from(payload: ConfigurationRejected) -> Self {
         Self::Rejected(payload)
+    }
+}
+
+#[rustfmt::skip]
+impl From<TranscriptionProviderPolicyRejection> for Output {
+    fn from(payload: TranscriptionProviderPolicyRejection) -> Self {
+        Self::TranscriptionProviderConfigurationRejected(payload)
     }
 }
 
@@ -381,9 +656,12 @@ impl std::fmt::Display for Output {
 #[rustfmt::skip]
 pub mod short_header {
     pub const INPUT_CONFIGURE: u64 = 0x0000000000000000;
+    pub const INPUT_CONFIGURE_TRANSCRIPTION_PROVIDERS: u64 = 0x0001000000000000;
     pub const OUTPUT_ACCEPTED: u64 = 0x0100000000000000;
-    pub const OUTPUT_REJECTED: u64 = 0x0101000000000000;
-    pub const OUTPUT_UNIMPLEMENTED: u64 = 0x0102000000000000;
+    pub const OUTPUT_TRANSCRIPTION_PROVIDERS_CONFIGURED: u64 = 0x0101000000000000;
+    pub const OUTPUT_REJECTED: u64 = 0x0102000000000000;
+    pub const OUTPUT_TRANSCRIPTION_PROVIDER_CONFIGURATION_REJECTED: u64 = 0x0103000000000000;
+    pub const OUTPUT_UNIMPLEMENTED: u64 = 0x0104000000000000;
 }
 
 #[rustfmt::skip]
@@ -512,6 +790,7 @@ impl std::error::Error for SignalFrameError {}
 )]
 pub enum InputRoute {
     Configure,
+    ConfigureTranscriptionProviders,
 }
 
 #[rustfmt::skip]
@@ -531,7 +810,9 @@ pub enum InputRoute {
 )]
 pub enum OutputRoute {
     Accepted,
+    TranscriptionProvidersConfigured,
     Rejected,
+    TranscriptionProviderConfigurationRejected,
     Unimplemented,
 }
 
@@ -540,16 +821,25 @@ impl Input {
     pub fn route(&self) -> InputRoute {
         match self {
             Self::Configure(_) => InputRoute::Configure,
+            Self::ConfigureTranscriptionProviders(_) => {
+                InputRoute::ConfigureTranscriptionProviders
+            }
         }
     }
     pub fn short_header(&self) -> u64 {
         match self {
             Self::Configure(_) => short_header::INPUT_CONFIGURE,
+            Self::ConfigureTranscriptionProviders(_) => {
+                short_header::INPUT_CONFIGURE_TRANSCRIPTION_PROVIDERS
+            }
         }
     }
     pub fn route_from_short_header(header: u64) -> Result<InputRoute, SignalFrameError> {
         match header {
             short_header::INPUT_CONFIGURE => Ok(InputRoute::Configure),
+            short_header::INPUT_CONFIGURE_TRANSCRIPTION_PROVIDERS => {
+                Ok(InputRoute::ConfigureTranscriptionProviders)
+            }
             _ => {
                 Err(SignalFrameError::UnknownHeader {
                     root_enum: "Input",
@@ -611,14 +901,26 @@ impl Output {
     pub fn route(&self) -> OutputRoute {
         match self {
             Self::Accepted(_) => OutputRoute::Accepted,
+            Self::TranscriptionProvidersConfigured(_) => {
+                OutputRoute::TranscriptionProvidersConfigured
+            }
             Self::Rejected(_) => OutputRoute::Rejected,
+            Self::TranscriptionProviderConfigurationRejected(_) => {
+                OutputRoute::TranscriptionProviderConfigurationRejected
+            }
             Self::Unimplemented(_) => OutputRoute::Unimplemented,
         }
     }
     pub fn short_header(&self) -> u64 {
         match self {
             Self::Accepted(_) => short_header::OUTPUT_ACCEPTED,
+            Self::TranscriptionProvidersConfigured(_) => {
+                short_header::OUTPUT_TRANSCRIPTION_PROVIDERS_CONFIGURED
+            }
             Self::Rejected(_) => short_header::OUTPUT_REJECTED,
+            Self::TranscriptionProviderConfigurationRejected(_) => {
+                short_header::OUTPUT_TRANSCRIPTION_PROVIDER_CONFIGURATION_REJECTED
+            }
             Self::Unimplemented(_) => short_header::OUTPUT_UNIMPLEMENTED,
         }
     }
@@ -627,7 +929,13 @@ impl Output {
     ) -> Result<OutputRoute, SignalFrameError> {
         match header {
             short_header::OUTPUT_ACCEPTED => Ok(OutputRoute::Accepted),
+            short_header::OUTPUT_TRANSCRIPTION_PROVIDERS_CONFIGURED => {
+                Ok(OutputRoute::TranscriptionProvidersConfigured)
+            }
             short_header::OUTPUT_REJECTED => Ok(OutputRoute::Rejected),
+            short_header::OUTPUT_TRANSCRIPTION_PROVIDER_CONFIGURATION_REJECTED => {
+                Ok(OutputRoute::TranscriptionProviderConfigurationRejected)
+            }
             short_header::OUTPUT_UNIMPLEMENTED => Ok(OutputRoute::Unimplemented),
             _ => {
                 Err(SignalFrameError::UnknownHeader {
@@ -689,7 +997,10 @@ impl Output {
 impl signal_frame::RequestPayload for Input {}
 #[rustfmt::skip]
 impl signal_frame::SignalOperationHeads for Input {
-    const HEADS: &'static [&'static str] = &["Configure"];
+    const HEADS: &'static [&'static str] = &[
+        "Configure",
+        "ConfigureTranscriptionProviders",
+    ];
 }
 #[rustfmt::skip]
 impl signal_frame::LogVariant for Input {

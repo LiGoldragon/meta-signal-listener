@@ -2,7 +2,11 @@
 
 use meta_signal_listener::{
     ConfigurationGeneration, ConfigurationRejected, ConfigurationRejectionReason, Frame, FrameBody,
-    Generation, Input, OperationKind, Output, Reason, RejectionReason, RequestUnimplemented,
+    Generation, Input, OperationKind, Output, ProviderPolicyConfigured,
+    ProviderPolicyGeneration, ProviderPolicyGenerationReceipt, Reason, RejectionReason,
+    RequestUnimplemented, TranscriptionProviderConfigurationRejected,
+    TranscriptionProviderConfigurationRejectionReason, TranscriptionProviderId,
+    TranscriptionProviderIds, TranscriptionProviderPolicy, TranscriptionProviderPolicyRejection,
     UnimplementedOperationKind, UnimplementedReason,
 };
 use nota::{NotaDecode, NotaEncode, NotaSource};
@@ -103,12 +107,36 @@ fn configure_request_carries_listener_daemon_configuration() {
 }
 
 #[test]
+fn ordered_provider_policy_configuration_round_trips() {
+    let policy = TranscriptionProviderPolicy::new(TranscriptionProviderIds::new(vec![
+        TranscriptionProviderId::WisprFlow,
+        TranscriptionProviderId::OpenAi,
+    ]));
+    let request = Input::ConfigureTranscriptionProviders(policy.clone());
+
+    assert_eq!(request.kind(), OperationKind::ConfigureTranscriptionProviders);
+    ListenerConfigurationFixture::assert_request_round_trips(request.clone());
+    ListenerConfigurationFixture::assert_nota_round_trips(&request);
+    assert_eq!(policy.payload().payload(), &[TranscriptionProviderId::WisprFlow, TranscriptionProviderId::OpenAi]);
+}
+
+#[test]
 fn reply_variants_round_trip() {
     let replies = [
         Output::accepted(Generation::new(ConfigurationGeneration::new(7))),
         Output::Rejected(ConfigurationRejected::new(RejectionReason::new(
             ConfigurationRejectionReason::OwnerAuthorityRequired,
         ))),
+        Output::TranscriptionProvidersConfigured(ProviderPolicyConfigured::new(
+            ProviderPolicyGenerationReceipt::new(ProviderPolicyGeneration::new(8)),
+        )),
+        Output::TranscriptionProviderConfigurationRejected(
+            TranscriptionProviderConfigurationRejected::new(
+                TranscriptionProviderPolicyRejection::new(
+                    TranscriptionProviderConfigurationRejectionReason::Duplicate,
+                ),
+            ),
+        ),
         Output::Unimplemented(RequestUnimplemented {
             unimplemented_operation_kind: UnimplementedOperationKind::new(OperationKind::Configure),
             reason: Reason::new(UnimplementedReason::DependencyNotReady),

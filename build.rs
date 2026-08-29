@@ -31,7 +31,7 @@ impl SchemaBuild {
                 );
 
         GenerationDriver::new(
-            GenerationPlan::wire_contract(&self.crate_root, "meta-signal-listener", "0.3.0")
+            GenerationPlan::wire_contract(&self.crate_root, "meta-signal-listener", "0.4.0")
                 .with_dependency_schema(ordinary_signal),
         )
         .generate()

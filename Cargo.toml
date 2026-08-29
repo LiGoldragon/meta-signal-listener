@@ -1,6 +1,6 @@
 [package]
 name         = "meta-signal-listener"
-version      = "0.3.0"
+version      = "0.4.0"
 edition      = "2024"
 rust-version = "1.89"
 license      = "MIT OR Apache-2.0"
@@ -24,14 +24,14 @@ default = []
 nota-text = ["dep:nota", "signal-frame/nota-text", "signal-listener/nota-text"]
 
 [dependencies]
-nota            = { package = "nota", git = "https://github.com/LiGoldragon/nota.git", branch = "main", optional = true }
+nota            = { package = "nota", git = "https://github.com/LiGoldragon/nota.git", rev = "7d0651a0e098efea5fe2578cb06d88e009d40ff0", optional = true }
 rkyv            = { version = "0.8", default-features = false, features = ["std", "bytecheck", "little_endian", "pointer_width_32", "unaligned"] }
-signal-frame    = { git = "https://github.com/LiGoldragon/signal-frame.git", branch = "main", default-features = false }
-signal-listener = { git = "https://github.com/LiGoldragon/signal-listener.git", branch = "main", default-features = false }
+signal-frame    = { git = "https://github.com/LiGoldragon/signal-frame.git", rev = "f46872e7e8edae5264c892443d415a273b231234", default-features = false }
+signal-listener = { git = "https://github.com/LiGoldragon/signal-listener.git", rev = "48fe6d341a5b53d32dd932fe152b03c63cc9f2c3", default-features = false }
 thiserror       = "2"
 
 [build-dependencies]
-schema-rust = { git = "https://github.com/LiGoldragon/schema-rust.git", branch = "main" }
+schema-rust = { git = "https://github.com/LiGoldragon/schema-rust.git", rev = "3121201736089128ae8332004df0340c55026de2" }
 
 [lints.rust]
 unsafe_code = "forbid"

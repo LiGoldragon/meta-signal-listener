@@ -14,10 +14,25 @@ impl ConfigurationGeneration {
     }
 }
 
+impl ProviderPolicyGeneration {
+    pub fn value(&self) -> u64 {
+        *self.payload()
+    }
+}
+
+impl TranscriptionProviderPolicy {
+    pub fn providers(&self) -> &[TranscriptionProviderId] {
+        self.payload().payload().as_slice()
+    }
+}
+
 impl Input {
     pub fn kind(&self) -> OperationKind {
         match self {
             Self::Configure(_) => OperationKind::Configure,
+            Self::ConfigureTranscriptionProviders(_) => {
+                OperationKind::ConfigureTranscriptionProviders
+            }
         }
     }
 }

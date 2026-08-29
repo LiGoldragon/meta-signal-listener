@@ -1,17 +1,28 @@
 ;; meta-signal-listener — owner/meta authority wire contract for Listener.
 { signal-listener.lib.ListenerDaemonConfiguration }
-[Configure.ListenerDaemonConfiguration]
-[Accepted.Configured Rejected.ConfigurationRejected Unimplemented.RequestUnimplemented]
+[Configure.ListenerDaemonConfiguration ConfigureTranscriptionProviders.TranscriptionProviderPolicy]
+[Accepted.Configured TranscriptionProvidersConfigured.ProviderPolicyConfigured Rejected.ConfigurationRejected TranscriptionProviderConfigurationRejected.TranscriptionProviderPolicyRejection Unimplemented.RequestUnimplemented]
 {
   ConfigurationGeneration.Integer
   Generation.ConfigurationGeneration
   Configured.Generation
 
+  TranscriptionProviderId.[WisprFlow OpenAi]
+  TranscriptionProviderIds.Vector.TranscriptionProviderId
+  TranscriptionProviderPolicy.TranscriptionProviderIds
+  ProviderPolicyGeneration.Integer
+  ProviderPolicyGenerationReceipt.ProviderPolicyGeneration
+  ProviderPolicyConfigured.ProviderPolicyGenerationReceipt
+
+  TranscriptionProviderConfigurationRejectionReason.[Empty Duplicate]
+  TranscriptionProviderPolicyRejection.TranscriptionProviderConfigurationRejectionReason
+  TranscriptionProviderConfigurationRejected.TranscriptionProviderPolicyRejection
+
   ConfigurationRejectionReason.[OwnerAuthorityRequired MalformedConfiguration UnsupportedConfiguration]
   RejectionReason.ConfigurationRejectionReason
   ConfigurationRejected.RejectionReason
 
-  OperationKind.[Configure]
+  OperationKind.[Configure ConfigureTranscriptionProviders]
   UnimplementedReason.[NotBuiltYet DependencyNotReady]
   UnimplementedOperationKind.OperationKind
   Reason.UnimplementedReason
