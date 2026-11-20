@@ -1,39 +1,27 @@
 [package]
-name         = "meta-signal-listener"
-version      = "0.3.0"
-edition      = "2024"
+name = "meta-signal-listener"
+version = "1.0.0"
+edition = "2024"
 rust-version = "1.89"
-license      = "MIT OR Apache-2.0"
-repository   = "https://github.com/LiGoldragon/meta-signal-listener"
-description  = "Meta signal contract for privileged Listener configuration."
-publish      = false
-links        = "meta-signal-listener"
-build        = "build.rs"
-
-[lib]
-name = "meta_signal_listener"
-path = "src/lib.rs"
-
-[[test]]
-name = "round_trip"
-path = "tests/round_trip.rs"
-required-features = ["nota-text"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/LiGoldragon/meta-signal-listener"
+publish = false
+build = "build.rs"
 
 [features]
 default = []
-nota-text = ["dep:nota", "signal-frame/nota-text", "signal-listener/nota-text"]
+datom = ["dep:datom-codec", "listener-library/datom", "signal/datom", "translator/datom"]
 
 [dependencies]
-nota            = { package = "nota", git = "https://github.com/LiGoldragon/nota.git", branch = "main", optional = true }
-rkyv            = { version = "0.8", default-features = false, features = ["std", "bytecheck", "little_endian", "pointer_width_32", "unaligned"] }
-signal-frame    = { git = "https://github.com/LiGoldragon/signal-frame.git", branch = "main", default-features = false }
-signal-listener = { git = "https://github.com/LiGoldragon/signal-listener.git", branch = "main", default-features = false }
-thiserror       = "2"
-
+rkyv = { version = "0.8", default-features = false, features = ["std", "bytecheck", "little_endian", "pointer_width_32", "unaligned"] }
+datom-codec = { git = "https://github.com/LiGoldragon/datom-codec", rev = "09a0526", optional = true }
+listener-library = { git = "https://github.com/LiGoldragon/listener-library", rev = "3549987a7fa5eaab826f21521d5d6a3a23a7d8d7", default-features = false }
+signal = { git = "https://github.com/LiGoldragon/signal", rev = "4f5cbb9", default-features = false }
+translator = { git = "https://github.com/LiGoldragon/translator", rev = "8d26df34e13291f34fcda85513c86e6f7c271405", default-features = false }
 [build-dependencies]
-schema-rust = { git = "https://github.com/LiGoldragon/schema-rust.git", branch = "main" }
+ethos-zero = { git = "https://github.com/LiGoldragon/ethos-zero", rev = "2999292dc67c8608e54d32c333c550b29153cbff" }
 
 [lints.rust]
 unsafe_code = "forbid"
-unused      = { level = "warn", priority = -1 }
-dead_code   = "warn"
+unused = { level = "warn", priority = -1 }
+dead_code = "warn"
