@@ -30,10 +30,6 @@ pub enum Set {
 #[rustfmt::skip]
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "datom", derive(datom_codec::Datomizable, datom_codec::Composing))]
-pub struct UnknownBackend(pub listener_library::BackendName);
-#[rustfmt::skip]
-#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq, Hash)]
-#[cfg_attr(feature = "datom", derive(datom_codec::Datomizable, datom_codec::Composing))]
 pub struct Remember_Data {
     pub moment: listener_library::Moment,
     pub text: listener_library::Text,
@@ -50,12 +46,19 @@ pub enum Input {
 #[rustfmt::skip]
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "datom", derive(datom_codec::Datomizable, datom_codec::Composing))]
+pub enum Refused_Data {
+    UnknownBackend(listener_library::UnknownBackend),
+    InvalidValue,
+}
+#[rustfmt::skip]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "datom", derive(datom_codec::Datomizable, datom_codec::Composing))]
 pub enum Output {
     Configured(Set),
     Configuration(listener_library::Configuration),
     Remembered(listener_library::JobId),
     Subscribed(signal::Frame<listener_library::Configuration, Set>),
-    Refused(UnknownBackend),
+    Refused(Refused_Data),
 }
 #[rustfmt::skip]
 #[allow(clippy::large_enum_variant)]
