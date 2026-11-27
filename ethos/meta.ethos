@@ -8,7 +8,7 @@ Signal
 [ Configure.Set Configuration Remember.{ Moment Text } Subscribe ]
 [ Configured.Set Configuration.ConfigurationValue Remembered.JobId Subscribed.Stream<ConfigurationValue Set>
   Refused.UnknownBackend ]
-[ Set.[ Backend RemoveBackend.BackendName Order.Vector<BackendName> Delivery Sequence
+[ Set.[ Backend RemoveBackend.BackendName Order.⟦ BackendName ⟧ Delivery Sequence
     AudioKept.Retention TextKept.Retention AddTerm.Term RemoveTerm.Term Kilobits Source
     HistoryLength PasteProgram.Program CopyProgram.Program SecretProgram.Program
     AudioDirectory.Directory Budget.DatomReadingBudget RecordingSettings ]

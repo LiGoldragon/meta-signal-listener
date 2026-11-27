@@ -19,7 +19,7 @@ listener-library = { git = "https://github.com/LiGoldragon/listener-library", re
 signal = { git = "https://github.com/LiGoldragon/signal", rev = "4f5cbb9", default-features = false }
 translator = { git = "https://github.com/LiGoldragon/translator", rev = "8d26df34e13291f34fcda85513c86e6f7c271405", default-features = false }
 [build-dependencies]
-ethos-zero = { git = "https://github.com/LiGoldragon/ethos-zero", rev = "2999292dc67c8608e54d32c333c550b29153cbff" }
+ethos-zero = { git = "https://github.com/LiGoldragon/ethos-zero", rev = "9abd9fe56a2b1b84fb858ae4c8cb74435e063a04" }
 
 [lints.rust]
 unsafe_code = "forbid"
